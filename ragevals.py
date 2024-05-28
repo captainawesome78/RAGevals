@@ -1,5 +1,5 @@
 import torch
-from scarebleu import corpus_bleu
+from sacrebleu import corpus_bleu
 from rouge_score import rouge_scorer
 from bert_score import score
 from transformers import GPT2LMHeadModel, GPT2Tokenizer, pipeline
