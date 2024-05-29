@@ -5,7 +5,6 @@ from bert_score import score
 from transformers import GPT2LMHeadModel, GPT2Tokenizer, pipeline
 import nltk
 from nltk.util import ngrams
-from nltk.translate.meteor_score import meteor_score
 
 class RAGevals:
     def __init__(self):
@@ -25,11 +24,16 @@ class RAGevals:
         return bleu_score, rouge1
 
     def evaluate_bert_score(self, candidates, references):
-        P, R, F1 = score(candidates, references, lang ="en", model_type = "bert-base-multilingual-cased")
+        if isinstance(candidates, str):
+            candidates = [candidates]
+        if isinstance(references, str):
+            references = [references]
+        
+        P, R, F1 = score(candidates, references, lang="en", model_type="bert-base-multilingual-cased")
         return P.mean().item(), R.mean().item(), F1.mean().item()
-
+        
     def evaluate_perplexity(self, text):
-        encodings = self.gpt2_tokenizer(text, return_messages= "pt")
+        encodings = self.gpt2_tokenizer(text, return_tensors= "pt")
         max_length = self.gpt2_model.config.n_positions
         stride = 512
         lls = []
@@ -58,9 +62,6 @@ class RAGevals:
         bias_score = results[0]['scores'][results[0]['labels'].index('hate speech')]
         return bias_score
         
-    def evaluate_meteor(self, candidates, references):
-        meteor_scores = [meteor_score([ref], cand) for ref, cand in zip(references, candidates)]
-        return sum(meteor_scores) / len(meteor_scores)
     
     def evaluate_all(self, question, response, reference):
         candidates = [response]
@@ -79,6 +80,5 @@ class RAGevals:
             "BERT F1": bert_f1,
             "Perplexity": perplexity,
             "Diversity": diversity,
-            "Racial Bias": racial_bias,
-            "METEOR" : meteor
+            "Racial Bias": racial_bias
         }
