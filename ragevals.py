@@ -73,12 +73,36 @@ class RAGevals:
         racial_bias = self.evaluate_racial_bias(response)
         meteor = self.evaluate_meteor(candidates, references)
         return {
-            "BLEU": bleu,
-            "ROUGE-1": rouge1,
-            "BERT P": bert_p,
-            "BERT R": bert_r,
-            "BERT F1": bert_f1,
-            "Perplexity": perplexity,
-            "Diversity": diversity,
-            "Racial Bias": racial_bias
+            "BLEU": {
+                "score": bleu,
+                "description": "BLEU (BiLingual Evaluation Understudy) measures the overlap between the generated output and reference text based on n-grams. Higher scores indicate better match."
+            },
+            "ROUGE-1": {
+                "score": rouge1,
+                "description": "ROUGE-1 (Recall-Oriented Understudy for Gisting Evaluation)measures the overlap of unigrams between the generated output and reference text. Higher scores indicate better match."
+            },
+            "BERT P": {
+                "score": bert_p,
+                "description": "BERT Precision measures the accuracy of the generated text against the reference. Higher scores indicate better match."
+            },
+            "BERT R": {
+                "score": bert_r,
+                "description": "BERT Recall measures the completeness of the generated text against the reference using BERT embeddings. Higher scores indicate better match."
+            },
+            "BERT F1": {
+                "score": bert_f1,
+                "description": "BERT F1 combines precision and recall of the generated text against the reference using BERT embeddings. Higher scores indicate better match."
+            },
+            "Perplexity": {
+                "score": perplexity,
+                "description": "Perplexity measures how well a language model predicts the text. Lower values indicate better fluency and coherence."
+            },
+            "Diversity": {
+                "score": diversity,
+                "description": "Diversity measures the uniqueness of bigrams in the generated text. Higher scores indicate more diverse content."
+            },
+            "Racial Bias": {
+                "score": racial_bias,
+                "description": "Racial Bias measures the presence of hate speech or biased language in the generated text. Lower scores indicate less bias."
+            }
         }
